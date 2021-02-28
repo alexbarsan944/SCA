@@ -34,4 +34,11 @@ sid = sid_concat[:7]
 sid_sign = sid_concat[7:]
 
 # verify the received signature
-print(rsa_verify(sid, sid_sign, pub_km))
+signature_flag = rsa_verify(sid, sid_sign, pub_km)
+print("SignM(sid) is", signature_flag)
+
+# send the validity of the signature to the merchant
+send_msg(s, signature_flag.encode())
+
+if signature_flag == "invalid":
+    exit(1)

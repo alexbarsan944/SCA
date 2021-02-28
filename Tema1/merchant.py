@@ -1,12 +1,11 @@
 from lib import *
-import rsa_key_generate
 
 pub_km = RSA.import_key(open(public_merch, 'r').read())
 priv_km = RSA.import_key(open("private_merch.pem", 'r').read())
 
 sid = random.randint(0, 100)
 
-sid_sign = rsa_sign("{0:b}".format(sid).encode(), priv_km)
+sid_sign = rsa_sign("{0:07b}".format(sid).encode(), priv_km)
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind((host, port_merchant))
@@ -34,3 +33,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
         # send sid and signature to client
         send_msg(conn, encrypted_sid + encrypted_sk2)
+
+        # receive the validity from the client
+        signature_flag = recv_msg(conn).decode()
+        print("SignM(sid) is", signature_flag)
+        if signature_flag == "invalid":
+            exit(1)

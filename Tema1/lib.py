@@ -1,5 +1,4 @@
 import socket
-import pyaes
 import os
 from Crypto.Signature.pkcs1_15 import PKCS115_SigScheme
 from Crypto.Hash import SHA256
@@ -32,11 +31,8 @@ def send_msg(sd, message):
 
 def recv_msg(conn):
     msg_len = int(conn.recv(block_size).decode(), 2)
-
-    # receive {pub_kc}pub_km
     msg = conn.recv(msg_len)
     return msg
-
 
 
 def encrypt_aes(plaintext):
@@ -74,6 +70,6 @@ def rsa_verify(msg, signature, pubKey):
     verifier = PKCS115_SigScheme(pubKey)
     try:
         verifier.verify(h, signature)
-        return "Signature is valid."
+        return "valid."
     except:
-        return "Signature is invalid."
+        return "invalid."
