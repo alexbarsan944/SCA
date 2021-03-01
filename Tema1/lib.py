@@ -18,6 +18,7 @@ port_pg = 12346
 
 public_client = "public_client.pem"
 public_merch = "public_merch.pem"
+public_pg = "public_pg.pem"
 
 block_size = 128
 
@@ -33,6 +34,7 @@ def recv_msg(conn):
     msg_len = int(conn.recv(block_size).decode(), 2)
     msg = conn.recv(msg_len)
     return msg
+
 
 
 def encrypt_aes(plaintext):
@@ -70,6 +72,8 @@ def rsa_verify(msg, signature, pubKey):
     verifier = PKCS115_SigScheme(pubKey)
     try:
         verifier.verify(h, signature)
-        return "valid."
+        return "valid"
     except:
-        return "invalid."
+        return "invalid"
+
+
